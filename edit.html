@@ -1,14 +1,16 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>Рандомайзер: Редактор</title>
   <meta charset="UTF-8" />
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+    body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; }
     .preview { margin-top: 20px; border: 1px dashed #ccc; padding: 20px; text-align: center; }
     label { display: block; margin-top: 10px; }
     textarea { width: 100%; height: 100px; }
+    select, input[type="number"], input[type="color"], input[type="text"] {
+      width: 100%; padding: 5px; margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -35,6 +37,22 @@
   <label>Цвет текста:</label>
   <input type="color" id="textColor" value="#000000">
 
+  <label>Выбор шрифта:</label>
+  <select id="fontFamily">
+    <option value="Roboto">Roboto</option>
+    <option value="Open Sans">Open Sans</option>
+    <option value="Montserrat">Montserrat</option>
+    <option value="Comfortaa">Comfortaa</option>
+    <option value="Playfair Display">Playfair Display</option>
+    <option value="Raleway">Raleway</option>
+    <option value="Ubuntu">Ubuntu</option>
+    <option value="Bitter">Bitter</option>
+    <option value="Caveat">Caveat</option>
+    <option value="Marck Script">Marck Script</option>
+    <option value="Bad Script">Bad Script</option>
+    <option value="Stalinist One">Stalinist One</option>
+  </select>
+
   <label>Финальный фидбек:</label>
   <input type="text" id="winText" value="Well done!">
 
@@ -54,9 +72,10 @@
       preview.style.borderRadius = document.getElementById('borderRadius').value + "px";
       preview.style.fontSize = document.getElementById('fontSize').value + "px";
       preview.style.color = document.getElementById('textColor').value;
+      preview.style.fontFamily = document.getElementById('fontFamily').value;
     };
 
-    document.querySelectorAll('input').forEach(el => el.addEventListener('input', updatePreview));
+    document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', updatePreview));
 
     function generate() {
       const tasks = encodeURIComponent(document.getElementById('tasks').value);
@@ -69,10 +88,11 @@
         borderRadius: document.getElementById('borderRadius').value,
         fontSize: document.getElementById('fontSize').value,
         textColor: document.getElementById('textColor').value,
+        fontFamily: document.getElementById('fontFamily').value,
         winText: document.getElementById('winText').value,
       }).toString();
-      const url = "main.html?" + params;
-      const iframe = `<iframe src="${url}" width="600" height="600" frameborder="0"></iframe>`;
+      const fullURL = "https://nikashum93.github.io/randomizer-plugin/main.html?" + params;
+      const iframe = `<iframe src="${fullURL}" width="600" height="600" frameborder="0"></iframe>`;
       document.getElementById('iframeCode').textContent = iframe;
     }
 
