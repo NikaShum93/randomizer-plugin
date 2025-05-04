@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Рандомайзер</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      display: flex; justify-content: center; align-items: center;
+    }
+    #box {
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">Нажми, чтобы начать</div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const tasks = decodeURIComponent(params.get("tasks") || "").split(/\r?\n/).filter(t => t.trim());
+    const bgColor = params.get("bgColor") || "#fff";
+    const bgOpacity = parseFloat(params.get("bgOpacity") || "1");
+    const borderColor = params.get("borderColor") || "#000";
+    const borderWidth = parseInt(params.get("borderWidth") || "2");
+    const borderRadius = parseInt(params.get("borderRadius") || "20");
+    const fontSize = parseInt(params.get("fontSize") || "24");
+    const textColor = params.get("textColor") || "#000";
+    const winText = params.get("winText") || "You did it!";
+
+    const box = document.getElementById('box');
+    Object.assign(box.style, {
+      backgroundColor: bgColor,
+      opacity: bgOpacity,
+      borderColor: borderColor,
+      borderWidth: borderWidth + "px",
+      borderStyle: "solid",
+      borderRadius: borderRadius + "px",
+      fontSize: fontSize + "px",
+      color: textColor,
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    });
+
+    box.addEventListener('click', () => {
+      if (tasks.length > 0) {
+        const idx = Math.floor(Math.random() * tasks.length);
+        box.textContent = tasks.splice(idx, 1)[0];
+      } else {
+        box.textContent = winText;
+      }
+    });
+  </script>
+</body>
+</html>
