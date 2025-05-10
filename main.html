@@ -106,6 +106,7 @@
 
     const raw = decodeURIComponent(params.get("tasks") || "");
     const tasks = raw.split(/\r?\n|\n/).map(t => t.trim()).filter(Boolean);
+    shuffle(tasks); // перемешиваем задания
 
     const box = document.getElementById("box");
     box.textContent = startText;
@@ -169,6 +170,14 @@
         box.textContent = winText;
       }
     });
+
+    // Алгоритм Фишера-Йетса
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
   </script>
 </body>
 </html>
