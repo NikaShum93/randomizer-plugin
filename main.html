@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Рандомайзер</title>
+  <title>Debug Рандомайзер</title>
   <link id="fontLink" rel="stylesheet">
   <style>
     html, body {
@@ -22,33 +22,31 @@
       padding: 20px;
       text-align: center;
       cursor: pointer;
-      word-wrap: break-word;
-      word-break: break-word;
-      white-space: normal;
       position: relative;
       overflow: hidden;
       transition: transform 0.2s ease;
+      background-color: rgba(255, 255, 0, 0.05); /* чуть видимая подложка */
     }
 
     .flash {
-      animation: flashAnim 0.3s ease-in-out;
+      animation: flashAnim 0.4s ease-in-out;
     }
 
     @keyframes flashAnim {
-      0% { opacity: 0.4; transform: scale(0.95); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 1; transform: scale(1); }
+      0% { background-color: rgba(255, 0, 255, 0.3); transform: scale(0.95); }
+      50% { background-color: rgba(255, 255, 255, 0.6); transform: scale(1.05); }
+      100% { background-color: transparent; transform: scale(1); }
     }
 
     .sparkle {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: radial-gradient(circle, #fff, #0ff, #f0f);
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, #ffffff, #00ffff, #ff00ff);
       border-radius: 50%;
       pointer-events: none;
-      animation: sparkleAnim 0.8s linear forwards;
-      z-index: 999;
+      animation: sparkleAnim 1s linear forwards;
+      z-index: 9999;
     }
 
     @keyframes sparkleAnim {
@@ -76,7 +74,7 @@
   </style>
 </head>
 <body>
-  <div id="box"></div>
+  <div id="box">Debug mode...</div>
   <audio id="clickSound" src="https://nikashum93.github.io/randomizer-plugin/sound1.mp3" preload="auto"></audio>
 
   <script>
@@ -133,11 +131,11 @@
     }
 
     function createSparkle(x, y) {
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 20; i++) {
         const sparkle = document.createElement("div");
         sparkle.className = "sparkle";
-        const dx = (Math.random() - 0.5) * 100 + "px";
-        const dy = (Math.random() - 0.5) * 100 + "px";
+        const dx = (Math.random() - 0.5) * 150 + "px";
+        const dy = (Math.random() - 0.5) * 150 + "px";
         sparkle.style.left = x + "px";
         sparkle.style.top = y + "px";
         sparkle.style.setProperty("--dx", dx);
@@ -150,7 +148,6 @@
     let currentIndex = 0;
     box.addEventListener("click", (e) => {
       if (sound) sound.play().catch(() => {});
-
       box.classList.remove("flash");
       void box.offsetWidth;
       box.classList.add("flash");
