@@ -156,7 +156,6 @@
     let currentIndex = 0;
     box.addEventListener("click", (e) => {
       if (sound) sound.play().catch(() => {});
-
       box.classList.remove("flash", "fade-in");
       void box.offsetWidth;
       box.classList.add("flash", "fade-in");
