@@ -25,11 +25,58 @@
       word-wrap: break-word;
       word-break: break-word;
       white-space: normal;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .flash {
+      animation: flashAnim 0.3s ease-in-out;
+    }
+
+    @keyframes flashAnim {
+      0% { opacity: 0.2; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: sparkleAnim 0.8s linear forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+    }
+
+    .glow-border {
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+
+    .glow-text {
+      animation: pulseGlowText 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px var(--glow-color); }
+      50% { box-shadow: 0 0 25px var(--glow-color); }
+    }
+
+    @keyframes pulseGlowText {
+      0%, 100% { text-shadow: 0 0 8px var(--glow-color), 0 0 16px var(--glow-color); }
+      50% { text-shadow: 0 0 16px var(--glow-color), 0 0 32px var(--glow-color); }
     }
   </style>
 </head>
 <body>
-  <div id="box">Нажми, чтобы начать</div>
+  <div id="box"></div>
+  <audio id="clickSound" src="https://nikashum93.github.io/randomizer-plugin/sound1.mp3" preload="auto"></audio>
 
   <script>
     const params = new URLSearchParams(location.search);
@@ -43,19 +90,18 @@
     const textColor = params.get("textColor") || "#000000";
     const fontFamily = params.get("fontFamily") || "sans-serif";
     const winText = params.get("winText") || "You did it!";
+    const startText = params.get("startText") || "Нажми, чтобы начать";
+    const glow = params.get("glow") === "1";
 
-    // Подключаем нужный шрифт
     const fontForURL = fontFamily.replace(/ /g, "+");
     document.getElementById("fontLink").href =
       "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
 
-    // Получаем и разбиваем задания
     const raw = decodeURIComponent(params.get("tasks") || "");
     const tasks = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
 
-    // Стилизация блока
     const box = document.getElementById("box");
-    box.textContent = "Нажми, чтобы начать";
+    box.textContent = startText;
     box.style.backgroundColor = hexToRgba(bgColor, bgOpacity);
     box.style.borderColor = hexToRgba(borderColor, borderOpacity);
     box.style.borderWidth = borderWidth + "px";
@@ -65,6 +111,19 @@
     box.style.color = textColor;
     box.style.fontFamily = fontFamily;
 
+    const sound = document.getElementById("clickSound");
+
+    if (glow) {
+      const borderVisible = borderWidth > 0 && borderOpacity > 0;
+      const glowColor = borderVisible ? borderColor : textColor;
+      box.style.setProperty("--glow-color", glowColor);
+      if (borderVisible) {
+        box.classList.add("glow-border");
+      } else {
+        box.classList.add("glow-text");
+      }
+    }
+
     function hexToRgba(hex, alpha) {
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
@@ -72,9 +131,33 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    // Логика по клику — показываем по одному заданию
+    function createSparkle(x, y) {
+      for (let i = 0; i < 15; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        const dx = (Math.random() - 0.5) * 100 + "px";
+        const dy = (Math.random() - 0.5) * 100 + "px";
+        sparkle.style.left = x + "px";
+        sparkle.style.top = y + "px";
+        sparkle.style.setProperty("--dx", dx);
+        sparkle.style.setProperty("--dy", dy);
+        box.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 800);
+      }
+    }
+
     let currentIndex = 0;
-    box.addEventListener("click", () => {
+    box.addEventListener("click", (e) => {
+      if (sound) {
+        sound.play().catch((err) => console.warn("Звук не воспроизвёлся:", err));
+      }
+
+      box.classList.remove("flash");
+      void box.offsetWidth;
+      box.classList.add("flash");
+
+      createSparkle(e.offsetX, e.offsetY);
+
       if (currentIndex < tasks.length) {
         box.textContent = tasks[currentIndex];
         currentIndex++;
