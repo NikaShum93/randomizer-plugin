@@ -29,7 +29,11 @@
 
   <script>
     const params = new URLSearchParams(location.search);
-    const tasks = decodeURIComponent(params.get("tasks") || "").split(/\\r?\\n/).filter(t => t.trim());
+    let tasks = decodeURIComponent(params.get("tasks") || "")
+      .split(/\r?\n/)
+      .map(t => t.trim())
+      .filter(t => t);
+
     const bgColor = params.get("bgColor") || "#fff";
     const bgOpacity = parseFloat(params.get("bgOpacity") || "1");
     const borderColor = params.get("borderColor") || "#000";
@@ -40,10 +44,8 @@
     const fontFamily = params.get("fontFamily") || "Roboto";
     const winText = params.get("winText") || "You did it!";
 
-    // Подключаем Google Font
     const fontForURL = fontFamily.replace(/ /g, "+");
-    const fontLink = document.getElementById("fontLink");
-    fontLink.href = `https://fonts.googleapis.com/css2?family=${fontForURL}&display=swap`;
+    document.getElementById("fontLink").href = "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
 
     const box = document.getElementById('box');
     Object.assign(box.style, {
@@ -51,7 +53,7 @@
       opacity: bgOpacity,
       borderColor: borderColor,
       borderWidth: borderWidth + "px",
-      borderStyle: "solid",
+      borderStyle: borderWidth === 0 ? "none" : "solid",
       borderRadius: borderRadius + "px",
       fontSize: fontSize + "px",
       color: textColor,
@@ -63,10 +65,14 @@
       alignItems: "center"
     });
 
+    let firstClick = true;
     box.addEventListener('click', () => {
+      if (firstClick) {
+        firstClick = false;
+      }
+
       if (tasks.length > 0) {
-        const idx = Math.floor(Math.random() * tasks.length);
-        box.textContent = tasks.splice(idx, 1)[0];
+        box.textContent = tasks.shift();
       } else {
         box.textContent = winText;
       }
