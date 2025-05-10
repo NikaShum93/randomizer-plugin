@@ -1,98 +1,186 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Рандомайзер</title>
-  <link id="fontLink" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Редактор КГБ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+    body {
+      background-color: #0e0e1a;
+      color: #f0f0f0;
+      font-family: 'Montserrat', sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
     }
-
-    #box {
+    h1 {
+      color: #00ffff;
+      text-align: center;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .logo img {
+      height: 100px;
+    }
+    .slogan {
+      text-align: center;
+      color: #ff00ff;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    textarea, input, select {
       width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-sizing: border-box;
+      padding: 8px;
+      margin-top: 5px;
+      font-size: 16px;
+      background-color: #1a1a2e;
+      color: #ffffff;
+      border: 1px solid #444;
+      border-radius: 6px;
+    }
+    .preview {
+      margin-top: 20px;
+      border: 2px dashed #00ffff;
       padding: 20px;
       text-align: center;
+      transition: 0.3s;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #00ffff;
+      border: none;
+      color: #000;
+      font-size: 18px;
       cursor: pointer;
-      word-wrap: break-word;
-      word-break: break-word;
-      white-space: normal;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s ease;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #00ffff;
     }
-
-    .flash {
-      animation: flashAnim 0.3s ease-in-out;
+    button:hover {
+      background-color: #0ff;
     }
-
-    @keyframes flashAnim {
-      0% { opacity: 0.2; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 1; transform: scale(1); }
+    pre {
+      background-color: #111;
+      color: #0f0;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 6px;
     }
-
-    .sparkle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: sparkleAnim 0.8s linear forwards;
-    }
-
-    @keyframes sparkleAnim {
-      0% { transform: translate(0, 0) scale(1); opacity: 1; }
-      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+    small {
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
-  <div id="box"></div>
-  <audio id="clickSound" src="sound1.mp3" preload="auto"></audio>
+  <div class="logo">
+    <img src="https://nikashum93.github.io/pusyriki/assets/kgb-logo.png" alt="KGB Logo">
+  </div>
+  <div class="slogan">Корпорация Геймификации Будущего</div>
+
+  <h1>Редактор Рандомайзера</h1>
+
+  <label>Задания (до 40 строк):</label>
+  <textarea id="tasks"></textarea>
+
+  <label>Цвет фона:</label>
+  <input type="color" id="bgColor" value="#ffffff">
+
+  <label>Прозрачность фона (0–1):</label>
+  <input type="number" id="bgOpacity" min="0" max="1" step="0.1" value="1">
+
+  <label>Цвет рамки:</label>
+  <input type="color" id="borderColor" value="#00ffff">
+
+  <label>Прозрачность рамки (0–1):</label>
+  <input type="number" id="borderOpacity" min="0" max="1" step="0.1" value="1">
+
+  <label>Толщина рамки (px):</label>
+  <input type="number" id="borderWidth" value="2">
+
+  <label>Закругление углов (px):</label>
+  <input type="number" id="borderRadius" value="20">
+
+  <label>Размер шрифта (px):</label>
+  <input type="number" id="fontSize" value="24">
+
+  <label>Цвет текста:</label>
+  <input type="color" id="textColor" value="#ffffff">
+
+  <label>Выбор шрифта:</label>
+  <select id="fontFamily">
+    <option value="Roboto">Roboto</option>
+    <option value="Open Sans">Open Sans</option>
+    <option value="Montserrat" selected>Montserrat</option>
+    <option value="Comfortaa">Comfortaa</option>
+    <option value="Playfair Display">Playfair Display</option>
+    <option value="Raleway">Raleway</option>
+    <option value="Ubuntu">Ubuntu</option>
+    <option value="Bitter">Bitter</option>
+    <option value="Caveat">Caveat</option>
+    <option value="Marck Script">Marck Script</option>
+    <option value="Bad Script">Bad Script</option>
+    <option value="Stalinist One">Stalinist One</option>
+  </select>
+
+  <label>Финальный фидбек:</label>
+  <input type="text" id="winText" value="Well done!">
+
+  <label>Текст перед стартом:</label>
+  <input type="text" id="startText" value="Нажми, чтобы начать">
+
+  <label>
+    <input type="checkbox" id="glow"> 💡 Включить неоновое свечение
+  </label>
+  <small id="glowWarning" style="color: #ff00ff; display: none;">
+    Свечение работает только при видимой рамке. Если рамка прозрачна — будет светиться текст.
+  </small>
+
+  <div class="preview" id="preview">Предпросмотр текста</div>
+
+  <button onclick="generate()">Сгенерировать iFrame</button>
+  <pre id="iframeCode"></pre>
 
   <script>
-    const params = new URLSearchParams(location.search);
-    const bgColor = params.get("bgColor") || "#ffffff";
-    const bgOpacity = parseFloat(params.get("bgOpacity") || "1");
-    const borderColor = params.get("borderColor") || "#000000";
-    const borderOpacity = parseFloat(params.get("borderOpacity") || "1");
-    const borderWidth = parseInt(params.get("borderWidth") || "2");
-    const borderRadius = parseInt(params.get("borderRadius") || "0");
-    const fontSize = parseInt(params.get("fontSize") || "24");
-    const textColor = params.get("textColor") || "#000000";
-    const fontFamily = params.get("fontFamily") || "sans-serif";
-    const winText = params.get("winText") || "You did it!";
-    const startText = params.get("startText") || "Нажми, чтобы начать";
+    const preview = document.getElementById('preview');
+    let fontLink = document.createElement("link");
+    fontLink.rel = "stylesheet";
+    document.head.appendChild(fontLink);
 
-    const fontForURL = fontFamily.replace(/ /g, "+");
-    document.getElementById("fontLink").href =
-      "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
+    const updatePreview = () => {
+      const font = document.getElementById('fontFamily').value;
+      fontLink.href = "https://fonts.googleapis.com/css2?family=" + font.replace(/ /g, "+") + "&display=swap";
+      const bgColor = document.getElementById('bgColor').value;
+      const bgOpacity = document.getElementById('bgOpacity').value;
+      const borderColor = document.getElementById('borderColor').value;
+      const borderOpacity = document.getElementById('borderOpacity').value;
+      const borderWidth = document.getElementById('borderWidth').value;
 
-    const raw = decodeURIComponent(params.get("tasks") || "");
-    const tasks = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+      preview.style.backgroundColor = hexToRgba(bgColor, bgOpacity);
+      preview.style.borderColor = hexToRgba(borderColor, borderOpacity);
+      preview.style.borderWidth = borderWidth + "px";
+      preview.style.borderStyle = parseInt(borderWidth) === 0 ? "none" : "solid";
+      preview.style.borderRadius = document.getElementById('borderRadius').value + "px";
+      preview.style.fontSize = document.getElementById('fontSize').value + "px";
+      preview.style.color = document.getElementById('textColor').value;
+      preview.style.fontFamily = font;
 
-    const box = document.getElementById("box");
-    box.textContent = startText;
-    box.style.backgroundColor = hexToRgba(bgColor, bgOpacity);
-    box.style.borderColor = hexToRgba(borderColor, borderOpacity);
-    box.style.borderWidth = borderWidth + "px";
-    box.style.borderStyle = borderWidth === 0 ? "none" : "solid";
-    box.style.borderRadius = borderRadius + "px";
-    box.style.fontSize = fontSize + "px";
-    box.style.color = textColor;
-    box.style.fontFamily = fontFamily;
-
-    const sound = document.getElementById("clickSound");
+      // Подсказка
+      const bW = parseFloat(document.getElementById('borderWidth').value);
+      const bO = parseFloat(document.getElementById('borderOpacity').value);
+      document.getElementById('glowWarning').style.display =
+        document.getElementById('glow').checked && (bW === 0 || bO === 0)
+          ? "block"
+          : "none";
+    };
 
     function hexToRgba(hex, alpha) {
       const r = parseInt(hex.slice(1, 3), 16);
@@ -101,38 +189,35 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    function createSparkle(x, y) {
-      for (let i = 0; i < 15; i++) {
-        const sparkle = document.createElement("div");
-        sparkle.className = "sparkle";
-        const dx = (Math.random() - 0.5) * 100 + "px";
-        const dy = (Math.random() - 0.5) * 100 + "px";
-        sparkle.style.left = x + "px";
-        sparkle.style.top = y + "px";
-        sparkle.style.setProperty("--dx", dx);
-        sparkle.style.setProperty("--dy", dy);
-        box.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 800);
-      }
+    document.querySelectorAll('input, select, textarea').forEach(el =>
+      el.addEventListener('input', updatePreview)
+    );
+
+    function generate() {
+      const tasks = encodeURIComponent(document.getElementById('tasks').value);
+      const params = new URLSearchParams({
+        tasks,
+        bgColor: document.getElementById('bgColor').value,
+        bgOpacity: document.getElementById('bgOpacity').value,
+        borderColor: document.getElementById('borderColor').value,
+        borderOpacity: document.getElementById('borderOpacity').value,
+        borderWidth: document.getElementById('borderWidth').value,
+        borderRadius: document.getElementById('borderRadius').value,
+        fontSize: document.getElementById('fontSize').value,
+        textColor: document.getElementById('textColor').value,
+        fontFamily: document.getElementById('fontFamily').value,
+        winText: document.getElementById('winText').value,
+        startText: document.getElementById('startText').value,
+        glow: document.getElementById('glow').checked ? "1" : "0"
+      }).toString();
+      const fullURL = "https://nikashum93.github.io/randomizer-plugin/main.html?" + params;
+      const iframe = `<iframe src="${fullURL}" width="600" height="600" frameborder="0"></iframe>`;
+      document.getElementById('iframeCode').textContent = iframe;
+
+      updatePreview(); // Обновить подсказку
     }
 
-    let currentIndex = 0;
-    box.addEventListener("click", (e) => {
-      if (sound) sound.play().catch(() => {});
-
-      box.classList.remove("flash");
-      void box.offsetWidth;
-      box.classList.add("flash");
-
-      createSparkle(e.offsetX, e.offsetY);
-
-      if (currentIndex < tasks.length) {
-        box.textContent = tasks[currentIndex];
-        currentIndex++;
-      } else {
-        box.textContent = winText;
-      }
-    });
+    updatePreview();
   </script>
 </body>
 </html>
