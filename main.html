@@ -76,7 +76,7 @@
   </style>
 </head>
 <body>
-  <div id="box">Нажми, чтобы начать</div>
+  <div id="box">Загрузка...</div>
   <audio id="clickSound" src="https://nikashum93.github.io/randomizer-plugin/sound1.mp3" preload="auto"></audio>
 
   <script>
@@ -95,8 +95,11 @@
     const glow = params.get("glow") === "1";
 
     const fontForURL = fontFamily.replace(/ /g, "+");
-    document.getElementById("fontLink").href =
-      "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
+    const fontLink = document.createElement("link");
+    fontLink.id = "fontLink";
+    fontLink.rel = "stylesheet";
+    fontLink.href = `https://fonts.googleapis.com/css2?family=${fontForURL}&display=swap`;
+    document.head.appendChild(fontLink);
 
     const raw = decodeURIComponent(params.get("tasks") || "");
     const tasks = raw.split(/\r?\n|\n/).map(t => t.trim()).filter(Boolean);
@@ -114,12 +117,12 @@
     box.style.fontFamily = fontFamily;
 
     if (glow) {
-      const glowColor = textColor;
-      box.style.setProperty("--glow-color", glowColor);
+      box.style.setProperty("--glow-color", textColor);
       box.classList.add("glow-text");
     }
 
-    adjustText(startText);
+    // ВАЖНО: отложенная инициализация стартового текста
+    setTimeout(() => adjustText(startText), 100);
 
     function hexToRgba(hex, alpha) {
       const r = parseInt(hex.slice(1, 3), 16);
