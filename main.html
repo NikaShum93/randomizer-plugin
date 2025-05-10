@@ -65,17 +65,8 @@
       100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
     }
 
-    .glow-border {
-      animation: pulseGlow 2s ease-in-out infinite;
-    }
-
     .glow-text {
       animation: pulseGlowText 2s ease-in-out infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 10px var(--glow-color); }
-      50% { box-shadow: 0 0 25px var(--glow-color); }
     }
 
     @keyframes pulseGlowText {
@@ -109,7 +100,7 @@
 
     const raw = decodeURIComponent(params.get("tasks") || "");
     const tasks = raw.split(/\r?\n|\n/).map(t => t.trim()).filter(Boolean);
-    shuffle(tasks); // перемешиваем задания
+    shuffle(tasks);
 
     const box = document.getElementById("box");
     const sound = document.getElementById("clickSound");
@@ -123,14 +114,9 @@
     box.style.fontFamily = fontFamily;
 
     if (glow) {
-      const borderVisible = borderWidth > 0 && borderOpacity > 0;
-      const glowColor = borderVisible ? borderColor : textColor;
+      const glowColor = textColor;
       box.style.setProperty("--glow-color", glowColor);
-      if (borderVisible) {
-        box.classList.add("glow-border");
-      } else {
-        box.classList.add("glow-text");
-      }
+      box.classList.add("glow-text");
     }
 
     adjustText(startText);
@@ -178,7 +164,6 @@
       box.textContent = text;
       let currentSize = fontSize;
       box.style.fontSize = currentSize + "px";
-
       while ((box.scrollHeight > box.clientHeight || box.scrollWidth > box.clientWidth) && currentSize > 16) {
         currentSize--;
         box.style.fontSize = currentSize + "px";
