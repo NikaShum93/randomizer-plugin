@@ -25,6 +25,9 @@
       position: relative;
       overflow: hidden;
       transition: transform 0.2s ease;
+      word-break: normal;
+      word-wrap: break-word;
+      white-space: normal;
     }
 
     .flash {
@@ -109,17 +112,15 @@
     shuffle(tasks); // перемешиваем задания
 
     const box = document.getElementById("box");
-    box.textContent = startText;
+    const sound = document.getElementById("clickSound");
+
     box.style.backgroundColor = hexToRgba(bgColor, bgOpacity);
     box.style.borderColor = hexToRgba(borderColor, borderOpacity);
     box.style.borderWidth = borderWidth + "px";
     box.style.borderStyle = borderWidth === 0 ? "none" : "solid";
     box.style.borderRadius = borderRadius + "px";
-    box.style.fontSize = fontSize + "px";
     box.style.color = textColor;
     box.style.fontFamily = fontFamily;
-
-    const sound = document.getElementById("clickSound");
 
     if (glow) {
       const borderVisible = borderWidth > 0 && borderOpacity > 0;
@@ -131,6 +132,8 @@
         box.classList.add("glow-text");
       }
     }
+
+    adjustText(startText);
 
     function hexToRgba(hex, alpha) {
       const r = parseInt(hex.slice(1, 3), 16);
@@ -164,14 +167,24 @@
       createSparkle(e.offsetX, e.offsetY);
 
       if (currentIndex < tasks.length) {
-        box.textContent = tasks[currentIndex];
+        adjustText(tasks[currentIndex]);
         currentIndex++;
       } else {
-        box.textContent = winText;
+        adjustText(winText);
       }
     });
 
-    // Алгоритм Фишера-Йетса
+    function adjustText(text) {
+      box.textContent = text;
+      let currentSize = fontSize;
+      box.style.fontSize = currentSize + "px";
+
+      while ((box.scrollHeight > box.clientHeight || box.scrollWidth > box.clientWidth) && currentSize > 16) {
+        currentSize--;
+        box.style.fontSize = currentSize + "px";
+      }
+    }
+
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
