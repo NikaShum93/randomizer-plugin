@@ -105,7 +105,7 @@
       "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
 
     const raw = decodeURIComponent(params.get("tasks") || "");
-    const tasks = raw.split(/\\r?\\n|\\n/).map(t => t.trim()).filter(Boolean);
+    const tasks = raw.split(/\r?\n|\n/).map(t => t.trim()).filter(Boolean);
 
     const box = document.getElementById("box");
     box.textContent = startText;
