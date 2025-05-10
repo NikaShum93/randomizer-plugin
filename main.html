@@ -35,20 +35,20 @@
     }
 
     @keyframes flashAnim {
-      0% { opacity: 0.3; transform: scale(0.95); }
+      0% { opacity: 0.4; transform: scale(0.95); }
       50% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 1; transform: scale(1); }
     }
 
     .sparkle {
       position: absolute;
-      width: 5px;
-      height: 5px;
-      background: radial-gradient(circle, #ffffff, #00ffff, #ff00ff);
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, #fff, #0ff, #f0f);
       border-radius: 50%;
       pointer-events: none;
-      animation: sparkleAnim 1s linear forwards;
-      z-index: 10;
+      animation: sparkleAnim 0.8s linear forwards;
+      z-index: 999;
     }
 
     @keyframes sparkleAnim {
