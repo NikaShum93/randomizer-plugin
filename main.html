@@ -35,19 +35,20 @@
     }
 
     @keyframes flashAnim {
-      0% { opacity: 0.2; transform: scale(0.9); }
+      0% { opacity: 0.3; transform: scale(0.95); }
       50% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 1; transform: scale(1); }
     }
 
     .sparkle {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: white;
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, #ffffff, #00ffff, #ff00ff);
       border-radius: 50%;
       pointer-events: none;
-      animation: sparkleAnim 0.8s linear forwards;
+      animation: sparkleAnim 1s linear forwards;
+      z-index: 10;
     }
 
     @keyframes sparkleAnim {
@@ -98,7 +99,7 @@
       "https://fonts.googleapis.com/css2?family=" + fontForURL + "&display=swap";
 
     const raw = decodeURIComponent(params.get("tasks") || "");
-    const tasks = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+    const tasks = raw.split(/\\r?\\n|\\n/).map(t => t.trim()).filter(Boolean);
 
     const box = document.getElementById("box");
     box.textContent = startText;
@@ -142,15 +143,13 @@
         sparkle.style.setProperty("--dx", dx);
         sparkle.style.setProperty("--dy", dy);
         box.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 800);
+        setTimeout(() => sparkle.remove(), 1000);
       }
     }
 
     let currentIndex = 0;
     box.addEventListener("click", (e) => {
-      if (sound) {
-        sound.play().catch((err) => console.warn("Звук не воспроизвёлся:", err));
-      }
+      if (sound) sound.play().catch(() => {});
 
       box.classList.remove("flash");
       void box.offsetWidth;
