@@ -131,6 +131,9 @@
   <label>Финальный фидбек:</label>
   <input type="text" id="winText" value="Well done!">
 
+  <label>Текст перед стартом:</label>
+  <input type="text" id="startText" value="Нажми, чтобы начать">
+
   <div class="preview" id="preview">Предпросмотр текста</div>
 
   <button onclick="generate()">Сгенерировать iFrame</button>
@@ -168,7 +171,9 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', updatePreview));
+    document.querySelectorAll('input, select, textarea').forEach(el =>
+      el.addEventListener('input', updatePreview)
+    );
 
     function generate() {
       const tasks = encodeURIComponent(document.getElementById('tasks').value);
@@ -184,6 +189,7 @@
         textColor: document.getElementById('textColor').value,
         fontFamily: document.getElementById('fontFamily').value,
         winText: document.getElementById('winText').value,
+        startText: document.getElementById('startText').value
       }).toString();
       const fullURL = "https://nikashum93.github.io/randomizer-plugin/main.html?" + params;
       const iframe = `<iframe src="${fullURL}" width="600" height="600" frameborder="0"></iframe>`;
