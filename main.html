@@ -114,8 +114,7 @@
     box.style.borderStyle = borderWidth === 0 ? "none" : "solid";
     box.style.borderRadius = borderRadius + "px";
     box.style.color = textColor;
-    let family = fontFamily.replace(/\+/g, ' ');
-box.style.fontFamily = `'${family}', sans-serif`;
+   box.style.fontFamily = fontFamily;
 
     if (glow) {
       box.style.setProperty("--glow-color", textColor);
